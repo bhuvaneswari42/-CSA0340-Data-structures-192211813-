@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 10
+
+struct HashTable {
+    int keys[SIZE];
+    int values[SIZE];
+};
+
+int hashFunction(int key) {
+    return key % SIZE;
+}
+
+void insert(struct HashTable* table, int key, int value) {
+    int index = hashFunction(key);
+
+    while (table->keys[index] != -1) {
+        index = (index + 1) % SIZE;
+    }
+
+    table->keys[index] = key;
+    table->values[index] = value;
+}
+
+int search(struct HashTable* table, int key) {
+    int index = hashFunction(key);
+
+    while (table->keys[index] != -1) {
+        if (table->keys[index] == key) {
+            return table->values[index];
+        }
+        index = (index + 1) % SIZE;
+    }
+
+    return -1; // Key not found
+}
+
+int main() {
+    struct HashTable table;
+    for (int i = 0; i < SIZE; i++) {
+        table.keys[i] = -1;
+        table.values[i] = -1;
+    }
+
+    insert(&table, 12, 100);
+    insert(&table, 25, 200);
+    insert(&table, 35, 300);
+    insert(&table, 40, 400);
+
+    printf("Value for key 25: %d\n", search(&table, 25));
+    printf("Value for key 40: %d\n", search(&table, 40));
+    printf("Value for key 50: %d\n", search(&table, 50));
+
+    return 0;
+}
